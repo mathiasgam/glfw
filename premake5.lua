@@ -1,6 +1,8 @@
 project "GLFW"
     kind "StaticLib"
     language "C"
+    systemversion "latest"
+    staticruntime "on"
     
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -19,9 +21,6 @@ project "GLFW"
     }
     
 	filter "system:windows"
-        buildoptions { "-std=c11", "-lgdi32" }
-        --systemversion "10.0.17134.0"
-        staticruntime "On"
         
         files
         {
@@ -35,11 +34,18 @@ project "GLFW"
             "src/egl_context.c",
             "src/osmesa_context.c"
         }
-
 		defines 
 		{ 
             "_GLFW_WIN32",
             "_CRT_SECURE_NO_WARNINGS"
 		}
-    filter { "system:windows", "configurations:Release" }
-        buildoptions "/MT"
+
+    filter "configurations:Release"
+		optimize "on"
+		runtime "Release"
+
+
+  	filter "configurations:Debug"
+		symbols "on"
+		runtime "Debug"
+
